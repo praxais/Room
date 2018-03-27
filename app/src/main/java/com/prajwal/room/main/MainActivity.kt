@@ -51,7 +51,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 val user = User(Random().nextInt(), edtFirstName?.text.toString().trim(), edtLastName?.text.toString().trim())
 
                 compositeDisposable = CompositeDisposable()
-                compositeDisposable.add(insertToDatabase(user).observeOn(AndroidSchedulers.mainThread())
+                compositeDisposable.add(insertToDatabase(user)
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.newThread())
                         .subscribe({ e ->
                             showSnackbar(e)
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun insertToDatabase(user: User) =
             Single.create<String> { e ->
-                val appDatabase = Room.inMemoryDatabaseBuilder(this, AppDatabase::class.java).build()
+                val appDatabase = Room.databaseBuilder(this, AppDatabase::class.java, "User").build()
                 val userDao = appDatabase.userDao()
                 //insert user to Room
                 try {
