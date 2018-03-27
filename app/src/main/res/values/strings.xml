@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Room</string>
+
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="add">Add</string>
+
+    <string name="show_list">Show List</string>
+    <string name="error_first_name">Enter First Name</string>
+    <string name="error_last_name">Enter Last Name</string>
 </resources>
