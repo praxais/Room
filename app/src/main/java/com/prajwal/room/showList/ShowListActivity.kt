@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager
 import com.prajwal.room.R
 import com.prajwal.room.database.AppDatabase
 import com.prajwal.room.database.User
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -36,27 +35,18 @@ class ShowListActivity : AppCompatActivity() {
     }
 
     private fun getDataFromDb() {
-        disposable = getData().observeOn(AndroidSchedulers.mainThread())
+        val appDatabase = Room.databaseBuilder(this, AppDatabase::class.java, "User").build()
+        val userDao = appDatabase.userDao()
+
+        disposable = userDao.getAllUser().observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe({ e ->
+                .subscribe({ userList ->
+                    this.userList.addAll(userList)
                     showListAdapter.notifyDataSetChanged()
-                }, { e ->
+                }, { error ->
                     //TODO show error
                 })
     }
-
-    private fun getData() =
-            Single.create<String> { e ->
-                val appDatabase = Room.databaseBuilder(this, AppDatabase::class.java, "User").build()
-                val userDao = appDatabase.userDao()
-                //insert user to Room
-                try {
-                    userList.addAll(userDao.getAllUser())
-                    e.onSuccess("Successful")
-                } catch (exception: IllegalStateException) {
-                    e.onError(Throwable("Failure"))
-                }
-            }
 
     override fun onDestroy() {
         super.onDestroy()

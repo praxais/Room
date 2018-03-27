@@ -4,11 +4,12 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
+import io.reactivex.Single
 
 @Dao
 interface UserDao {
     @Query("SELECT * FROM user")
-    fun getAllUser(): List<User>
+    fun getAllUser(): Single<List<User>>
 
     @Query("SELECT * FROM user WHERE firstName LIKE :firstName AND lastName LIKE :lastName")
     fun getUserWithName(firstName: String, lastName: String): List<User>
